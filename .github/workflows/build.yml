@@ -25,9 +25,14 @@ jobs:
       - name: Build
         run: npm --prefix mon-app run build
 
+      - name: Update Known Hosts
+        run: |
+          mkdir -p $HOME/.ssh
+          touch $HOME/.ssh/known_hosts
+          ssh-keyscan -H 51.178.30.100 >> $HOME/.ssh/known_hosts
+
       - name: Deploy to Server
         run: |
           scp -r mon-app maxime@51.178.30.100:/home/maxime/web
         env:
           PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-          
