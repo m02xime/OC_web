@@ -1,4 +1,4 @@
-name: CI
+name: Build
 
 on:
   push:
@@ -17,6 +17,9 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 14
+
+      - name: Navigate to mon-app
+        run: cd mon-app
 
       - name: Install Dependencies
         run: npm install
