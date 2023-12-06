@@ -33,6 +33,6 @@ jobs:
 
       - name: Deploy to Server
         run: |
-          scp -r mon-app maxime@51.178.30.100:/home/maxime/web
+          scp -i $HOME/.ssh/id_ed25519 -r mon-app maxime@51.178.30.100:/home/maxime/web
         env:
           PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
