@@ -31,3 +31,4 @@ jobs:
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_ed25519
           chmod 600 ~/.ssh/id_ed25519
           scp -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=no -r mon-app maxime@51.178.30.100:/home/maxime/web
+          
