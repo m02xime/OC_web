@@ -1,4 +1,4 @@
-name: Build
+name: CD
 
 on:
   push:
@@ -6,9 +6,8 @@ on:
       - main
 
 jobs:
-  build:
+  deploy:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2
@@ -18,11 +17,14 @@ jobs:
         with:
           node-version: 14
 
-      - name: Navigate to mon-app
-        run: cd mon-app
-
       - name: Install Dependencies
         run: npm install
 
       - name: Build
-        run: npm run build
+        run: npm --prefix mon-app run build
+
+      - name: Deploy to Server
+        run: |
+          scp -r mon-app maxime@51.178.30.100:/home/maxime/web
+        env:
+          PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
