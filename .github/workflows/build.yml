@@ -18,7 +18,9 @@ jobs:
           node-version: 14
 
       - name: Install Dependencies
-        run: npm install
+        run: |
+          cd mon-app
+          npm install
 
       - name: Build
         run: npm --prefix mon-app run build
