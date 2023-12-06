@@ -26,9 +26,6 @@ jobs:
       - name: Build
         run: npm --prefix mon-app run build
 
-      - name: Set permissions for deploy key
-        run: chmod 600 /home/runner/.ssh/deploy_key
-        
       - name: Deploy ssh
         uses: easingthemes/ssh-deploy@v2.1.5
         env:
@@ -38,5 +35,3 @@ jobs:
           REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
           REMOTE_USER: ${{ secrets.REMOTE_USER }}
           TARGET: ${{ secrets.TARGET }}
-
-      
