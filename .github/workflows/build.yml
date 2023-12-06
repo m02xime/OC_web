@@ -18,6 +18,9 @@ jobs:
         with:
           node-version: 14
 
+      - name: Navigate to mon-app
+        run: cd mon-app
+
       - name: Install Dependencies
         run: npm install
 
