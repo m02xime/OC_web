@@ -28,13 +28,10 @@ jobs:
       - name: Update Known Hosts
         run: |
           mkdir -p $HOME/.ssh
-          touch $HOME/.ssh/known_hosts
-          ssh-keyscan -H 51.178.30.100 >> $HOME/.ssh/known_hosts
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          ssh-keyscan -t rsa github.com >> ~/.ssh/known_hosts
 
       - name: Deploy to Server
         run: |
-          scp -i /home/runner/.ssh/id_ed25519 -r mon-app maxime@51.178.30.100:/home/maxime/web
-        env:
-          PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-
-          
+          scp -i $HOME/.ssh/id_ed25519 -o StrictHostKeyChecking=no -r mon-app maxime@51.178.30.100:/home/maxime/web
