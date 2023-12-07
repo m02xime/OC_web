@@ -1,70 +1,49 @@
-# Getting Started with Create React App
+# Continuous Deployment with GitHub Actions
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This repository is set up for continuous deployment using GitHub Actions. The workflow is triggered on each push to the `main` branch.
 
-## Available Scripts
+## Workflow Description
 
-In the project directory, you can run:
+The workflow consists of the following steps:
 
-### `npm start`
+1. **Checkout Repository:** Checks out the latest code from the repository.
+2. **Setup Node.js:** Sets up Node.js version 14 for the build.
+3. **Install Dependencies:** Changes to the 'mon-app' directory and installs the project dependencies using npm.
+4. **Build:** Builds the application using the npm run build command.
+5. **Setup SSH Key:** Uses the webfactory/ssh-agent action to configure the SSH key for secure deployment.
+6. **Deploy:** Deploys the built application to the remote server using SCP.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+### Secrets
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+Make sure to add the following secrets to your GitHub repository:
 
-### `npm test`
+- `SSH_PRIVATE_KEY`: Your private SSH key for secure deployment.
+- `REMOTE_USER`: The username for accessing the remote server.
+- `REMOTE_HOST`: The IP address or hostname of the remote server.
+- `REMOTE_TARGET`: The target directory on the remote server where the built application will be deployed.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## Dockerfile
 
-### `npm run build`
+The repository includes a Dockerfile for containerization of the application. It is configured to use the official Node.js 14 image as the base image, install dependencies, build the application, and specify the command to run on container startup.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+```dockerfile
+# Use an official Node.js runtime as a parent image
+FROM node:14
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+# Set the working directory to /app
+WORKDIR /app
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+# Copy package.json and package-lock.json to the working directory
+COPY package*.json ./
 
-### `npm run eject`
+# Install app dependencies
+RUN npm install
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+# Copy the current directory contents into the container at /app
+COPY . /app
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+# Build the app
+RUN npm run build
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+# Specify the command to run on container startup
+CMD ["npm", "start"]

@@ -26,6 +26,10 @@ jobs:
       - name: Build
         run: npm --prefix mon-app run build
 
+      - name: Generate Version
+        id: version
+        run: echo "::set-output name=version::$(date +'%Y%m%d%H%M%S')"
+
       - name: setup SSH key
         uses: webfactory/ssh-agent@v0.5.0
         with:
@@ -34,6 +38,5 @@ jobs:
       - name: Deploy
         run: |
           cd mon-app
-          scp -r -o StrictHostKeyChecking=no ./build ${{ secrets.REMOTE_USER }}@${{ secrets.REMOTE_HOST }}:${{ secrets.REMOTE_TARGET }}
-
-          
+          version=$(echo "${{ steps.version.outputs.version }}")
+          scp -r -o StrictHostKeyChecking=no ./build ${{ secrets.REMOTE_USER }}@${{ secrets.REMOTE_HOST }}:${{ secrets.REMOTE_TARGET }}/build-$version
