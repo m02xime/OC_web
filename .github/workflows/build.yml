@@ -28,7 +28,7 @@ jobs:
 
       - name: Generate Version
         id: version
-        run: echo "::set-output name=version::$(date +'%Y%m%d%H%M%S')"
+        run: echo "::set-output name=version::$(date +'%Y-%m-%d-%Hh-%M-%S')"
 
       - name: setup SSH key
         uses: webfactory/ssh-agent@v0.5.0
